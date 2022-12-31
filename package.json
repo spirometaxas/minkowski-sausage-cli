@@ -1,6 +1,6 @@
 {
   "name": "minkowski-sausage-cli",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Print the Minkowski Sausage to the console!",
   "main": "./src/index.js",
   "bin": {
@@ -13,10 +13,14 @@
     "type": "git",
     "url": "https://github.com/spirometaxas/minkowski-sausage-cli.git"
   },
+  "homepage": "https://spirometaxas.com/projects/fractals-cli",
   "scripts": {
     "cli": "node ./src/cli.js"
   },
-  "author": "Spiro Metaxas",
+  "author": {
+    "name" : "Spiro Metaxas",
+    "url" : "https://spirometaxas.com"
+  },
   "license": "MIT",
   "keywords": [ 
     "Minkowski",

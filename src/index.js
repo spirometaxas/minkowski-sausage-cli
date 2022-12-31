@@ -1,3 +1,57 @@
+const LINES = {
+  '─': {
+    STANDARD: '─',
+    BOLD: '━',
+    DOUBLE: '═',
+  },
+  '│': {
+    STANDARD: '│',
+    BOLD: '┃',
+    DOUBLE: '║',
+  },
+  '┌': {
+    STANDARD: '┌',
+    BOLD: '┏',
+    DOUBLE: '╔',
+  },
+  '┐': {
+    STANDARD: '┐',
+    BOLD: '┓',
+    DOUBLE: '╗',
+  },
+  '┘': {
+    STANDARD: '┘',
+    BOLD: '┛',
+    DOUBLE: '╝',
+  },
+  '└': {
+    STANDARD: '└',
+    BOLD: '┗',
+    DOUBLE: '╚',
+  },
+};
+
+const getLine = function(lineId, lineType) {
+  if (LINES[lineId] !== undefined && lineType !== undefined) {
+    return LINES[lineId][lineType.toUpperCase()];
+  } else if (LINES[lineId] !== undefined) {
+    return LINES[lineId].STANDARD;
+  } else {
+    return ' ';
+  }
+}
+
+const getLineType = function(line) {
+  if (line !== undefined && (line.toLowerCase() === 'standard' || line.toLowerCase() === 'double' || line.toLowerCase() === 'bold')) {
+    return line.toLowerCase();
+  }
+  return 'standard';
+}
+
+const isValidRotation = function(rotation) {
+  return rotation !== undefined && (rotation.toLowerCase() === 'left' || rotation.toLowerCase() === 'right' || rotation.toLowerCase() === 'flip' || rotation.toLowerCase() === 'standard');
+}
+
 const createBoard = function(w, h) {
   let board = [];
   for (let i = 0; i < h; i++) {
@@ -295,28 +349,40 @@ const minkowski = function(n, type, params, inverse=false) {
   return board;
 }
 
-const draw = function(board) {
+const draw = function(board, lineType) {
   var result = '\n ';
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length; j++) {
-      result += board[board.length - i - 1][j];
+      result += getLine(board[board.length - i - 1][j], lineType);
     }
     result += '\n ';
   }
   return result;
 }
 
-const create = function(n, inverse=false) {
+const create = function(n, config) {
   if (n === undefined || isNaN(n) || n < 0) {
     return '';
   }
 
-  const board = minkowski(n, 'right', { end1: 'left', end2: 'right' }, inverse);
+  const inverse = config !== undefined && config.inverse === true;
+  const rotate = config !== undefined && isValidRotation(config.rotate) ? config.rotate.toLowerCase() : 'standard';
+  const lineType = config !== undefined ? getLineType(config.line) : undefined;
+
+  let board;
+  if (rotate === 'left') {
+    board = minkowski(n, 'up', { end1: 'down', end2: 'up' }, inverse);
+  } else if (rotate === 'right') {
+    board = minkowski(n, 'down', { end1: 'up', end2: 'down' }, inverse);
+  } else if (rotate === 'flip') {
+    board = minkowski(n, 'left', { end1: 'right', end2: 'left' }, inverse);
+  } else {
+    board = minkowski(n, 'right', { end1: 'left', end2: 'right' }, inverse);
+  }
   
-  return draw(board);
+  return draw(board, lineType);
 }
 
 module.exports = {
   create: create,
-  minkowski: minkowski,
 };
