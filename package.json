@@ -1,6 +1,6 @@
 {
   "name": "minkowski-sausage-cli",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Print the Minkowski Sausage to the console!",
   "main": "./src/index.js",
   "bin": {
